@@ -21,20 +21,20 @@ public class ZmHashAuth {
 	private String user;
 	private String password;
 	private String url;
+	private HttpClient client;
 
-
-	public ZmHashAuth(String ur,String u, String p){
+	public ZmHashAuth(String ur,String u, String p, HttpClient cl){
 		user = u;
 		password = p;
 		url = ur;
+		client = cl;
 	}
 	
 	public String getAuthHash(){
 		String auth = "";
 				 
 		// Perform login through an HTTP POST
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(url);
+		HttpPost post = new HttpPost(url+"?skin=classic");
 	 
 		// add header
 		post.setHeader("User-Agent", "Mozilla");
@@ -68,6 +68,8 @@ public class ZmHashAuth {
 			while ((line = rd.readLine()) != null) {
 				result.append(line);
 			}
+			
+			System.out.println(result.toString());
 			
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block

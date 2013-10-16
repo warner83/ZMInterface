@@ -296,25 +296,31 @@ public class CaptureMJPEG extends Thread {
 				continue;
 			}
 			
-			// automagically guess the boundary
-			Header contentType = this.method.getResponseHeader("Content-Type");
-			String contentTypeS = contentType.toString();
-			int startIndex = contentTypeS.indexOf("boundary=");
-			int endIndex = contentTypeS.indexOf(';', startIndex);
-			if (endIndex == -1) {//boundary is the last option
-				/* some servers, like mjpeg-streamer puts
-				 * a '\r' character at the end of each line.
-				 */
-				if((endIndex = contentTypeS.indexOf('\r',
-						startIndex)) == -1)  
-					endIndex = contentTypeS.length();
-			}
-			boundary = contentTypeS.substring(startIndex + 9, endIndex);
-			//some cameras put -- on boundary, some not
-			if (boundary.charAt(0) != '-' && 
-					boundary.charAt(1) != '-')
-				boundary = "--" + boundary;
+			try{
+				
+				// automagically guess the boundary
+				Header contentType = this.method.getResponseHeader("Content-Type");
+				String contentTypeS = contentType.toString();
+				int startIndex = contentTypeS.indexOf("boundary=");
+				int endIndex = contentTypeS.indexOf(';', startIndex);
+				if (endIndex == -1) {//boundary is the last option
+					/* some servers, like mjpeg-streamer puts
+					 * a '\r' character at the end of each line.
+					 */
+					if((endIndex = contentTypeS.indexOf('\r',
+							startIndex)) == -1)  
+						endIndex = contentTypeS.length();
+				}
+				boundary = contentTypeS.substring(startIndex + 9, endIndex);
+				//some cameras put -- on boundary, some not
+				if (boundary.charAt(0) != '-' && 
+						boundary.charAt(1) != '-')
+					boundary = "--" + boundary;
 						
+			} catch (Exception e){
+				// Who cares? Running the next cycle will solve the issue, whatever...
+			}
+			
 			while (!this.shouldStop) {
 	
 				synchronized (this.method) {

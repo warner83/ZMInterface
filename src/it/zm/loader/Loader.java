@@ -2,6 +2,9 @@ package it.zm.loader;
 
 import javax.swing.*; 
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
@@ -13,6 +16,7 @@ import java.util.List;
 
 import it.zm.auth.ZmHashAuth;
 import it.zm.interfaces.*;
+import it.zm.xml.DataCameras;
 
 public class Loader {
 
@@ -23,29 +27,52 @@ public class Loader {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				
-				int x = 1000, y = 500;
+				String baseUrl = new String("http://192.168.69.104/zm/index.php");
 				
-				authenticator = new ZmHashAuth("http://192.168.69.104/zm/index.php", "admin", "laboratorio55");
+				// Create Http connection for everyone
+				HttpClient client = new DefaultHttpClient();
+				
+				int playGroundX = 2000, playGroundY = 1000; // TODO evaluate the playground 
+				
+				// Authenticate
+				authenticator = new ZmHashAuth(baseUrl, "admin", "laboratorio55", client);
 
 				String auth = authenticator.getAuthHash();
 				
+				// Get number of cameras
+				DataCameras dc = new DataCameras(baseUrl, client);
+				dc.fetchData();
+				int numCameras = dc.getNumCameras();
+
+				// Create the superframe
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setSize(x, y);
+				frame.setSize(playGroundX, playGroundY);
 				frame.setResizable(false);
-				frame.setLayout(new GridLayout(0,2));
+				
+				// Evaluate the size of the grid
+				int gridSize = (int) Math.ceil(Math.sqrt(numCameras));
+				System.out.println(gridSize);
+				
+				frame.setLayout(new GridLayout(gridSize,gridSize));
 				
 				try {
-					ImageWindow window = new ImageWindow("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor=3&scale=100&maxfps=5&buffer=1000&"+auth, frame);
-					window.setPosAndSize(0,0,x/2,y/2);
-					ImageWindow window2 = new ImageWindow("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor=1&scale=100&maxfps=5&buffer=1000&"+auth, frame);
-					window2.setPosAndSize(x/2,0,x/2,y/2);
+					for(int i=0; i < numCameras; ++i){
+						// Try to fill the grid of the superframe
+						
+						// Create image view
+						ImageWindow window = new ImageWindow("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
+										+ i + "&scale=100&maxfps=5&buffer=1000&"+auth, frame);
+						
+						// Set its size and position
+						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
+					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
 				frame.setVisible(true);
-				//frame.pack();
 			}
 		});
     }
