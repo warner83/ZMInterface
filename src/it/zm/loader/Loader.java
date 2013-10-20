@@ -5,8 +5,10 @@ import javax.swing.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,7 +34,12 @@ public class Loader {
 				// Create Http connection for everyone
 				HttpClient client = new DefaultHttpClient();
 				
-				int playGroundX = 2000, playGroundY = 1000; // TODO evaluate the playground 
+				// Get screen resolution
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				double width = screenSize.getWidth();
+				double height = screenSize.getHeight();
+				
+				int playGroundX = (int)width, playGroundY = (int) height; 
 				
 				// Authenticate
 				authenticator = new ZmHashAuth(baseUrl, "admin", "laboratorio55", client);
@@ -56,13 +63,15 @@ public class Loader {
 				
 				frame.setLayout(new GridLayout(gridSize,gridSize));
 				
+				List<String> IDs = dc.getIDs();
+				
 				try {
 					for(int i=0; i < numCameras; ++i){
 						// Try to fill the grid of the superframe
 						
 						// Create image view
 						ImageWindow window = new ImageWindow("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
-										+ i + "&scale=100&maxfps=5&buffer=1000&"+auth, frame);
+										+ IDs.get(i) + "&scale=100&maxfps=5&buffer=1000&"+auth, frame, true);
 						
 						// Set its size and position
 						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);

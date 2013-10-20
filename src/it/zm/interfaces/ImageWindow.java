@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,15 +36,24 @@ public class ImageWindow extends JPanel {
 
 	private CaptureMJPEG capture;
 	
+	private boolean resize;
+	
 	BufferedImage img; // Img currently shown
 	
 	/**
 	 * Create the application.
 	 */
-	public ImageWindow(String u, JFrame f) {
+	public ImageWindow(String u, JFrame f, boolean res) {
 		frame = f;
 		url = u;
 		img = null;
+		resize = res;
+		
+		if(res){
+			// The image window has to be resized -> it is part of a mosaic, let's handle mouse click
+			this.addMouseListener(new MouseHander(url));
+		}
+		
 		try {
 			initialize();
 		} catch (MalformedURLException e) {
@@ -58,6 +69,11 @@ public class ImageWindow extends JPanel {
 		this.setBounds(x, y, width, height);
 	}
 	
+	public void setFrameSize(int width, int height){
+		frame.setSize(width , height);
+	}
+
+	
 	/**
 	 * Initialize the contents of the frame.
 	 * @throws IOException 
@@ -68,6 +84,8 @@ public class ImageWindow extends JPanel {
 		
 		  capture = new CaptureMJPEG(this,url);
 		  capture.startCapture();
+		  
+		  capture.setResizable(resize);
 	}
 	
     public void paintComponent(Graphics g) {
@@ -90,10 +108,7 @@ public class ImageWindow extends JPanel {
 	public void captureMJPEGEvent(Image img){
                 
         BufferedImage bi = (BufferedImage) img;
-
-        //final Image background = ImageUtils.scaleImage(bi.getHeight(), bi.getWidth(), (BufferedImage)img);
-        //final Dimension jpanelDimensions = new Dimension(new ImageIcon(background).getIconWidth(), new ImageIcon(background).getIconHeight());
-
+        
         changeImage(bi);
 	}
 
@@ -103,32 +118,51 @@ public class ImageWindow extends JPanel {
 
 }
 
-// Deprecated
-class ImgWindow extends JPanel {
+// Manage click on a frame
+class MouseHander implements MouseListener{
+	String url;
+	
+	public MouseHander(String u){
+		url = u;
+	}
 
-    BufferedImage img;
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// Create the superframe
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setSize(300, 300);
+		//frame.setResizable(false);
+		
+		// Create image view
+		ImageWindow window = new ImageWindow(url, frame, false);
+		
+		// Set visible
+		frame.setVisible(true);
+	}
 
-    public ImgWindow() {
-        img = null;
-     }
-    
-    public void paintComponent(Graphics g) {
-        g.drawImage(img, 0, 0, null);
-    }
-    
-    public void changeImage(BufferedImage i){
-    	img = i;
-    	this.repaint();
-    }
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public Dimension getPreferredSize() {
-        if (img == null) {
-             return new Dimension(100,100);
-        } else {
-           return new Dimension(img.getWidth(null), img.getHeight(null));
-       }
-    }
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
-
-

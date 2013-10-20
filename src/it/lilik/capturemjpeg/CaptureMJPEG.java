@@ -114,10 +114,8 @@ public class CaptureMJPEG extends Thread {
 	/** Last processed image **/
 	private Image lastImage;
 	
-	/** adaptive PApplet size **/
-	private boolean adaptFrameSize;
-	
-	private boolean changeFrameSize;
+	// If true change the image size according to the frame size, if unset do the contrary, resize the frame according to the image size
+	private boolean changeImageSize;
 	
 	
 	/**
@@ -136,7 +134,7 @@ public class CaptureMJPEG extends Thread {
 	 */
 	public void startCapture() {
 		this.start();
-		System.out.println("Caprure started");
+		//System.out.println("Caprure started");
 	}
 	/**
 	 * Stops this thread when the current image if finished
@@ -177,6 +175,11 @@ public class CaptureMJPEG extends Thread {
 			new UsernamePasswordCredentials(username, password);
 		client.getState().setCredentials(AuthScope.ANY, creds);
 	}
+	
+	// Set resizable, if set the image is resized before displaying, if unset the image is shown as it is
+	public void setResizable(boolean res){
+		changeImageSize = res;
+	}
 
 	/**
 	 * Creates a <code>CaptureMJPEG</code> without HTTP Auth credential
@@ -188,7 +191,7 @@ public class CaptureMJPEG extends Thread {
 	/**
 	 * Creates a <code>CaptureMJPEG</code> with HTTP Auth credential
 	 * 
-	 * @param parent the <code>PApplet</code> which uses this object
+	 * @param parent the <code>ImageWindow</code> which uses this object
 	 * @param url the MJPEG stream URI
 	 * @param username HTTP AUTH username
 	 * @param password HTTP AUTH password
@@ -199,8 +202,7 @@ public class CaptureMJPEG extends Thread {
 		//this.lastImage.init(parent.width, parent.height, PImage.RGB);
 		this.method = new GetMethod(url);
 		this.shouldStop = false;
-		this.adaptFrameSize = false;
-		this.changeFrameSize = false;
+		this.changeImageSize = false;
 		buffer = new CircularBuffer();
 		// create a singular HttpClient object
 		this.client = new HttpClient();
@@ -219,7 +221,7 @@ public class CaptureMJPEG extends Thread {
 		
 		this.parent = parent;
 		
-		System.out.println("Capture initialized");
+		//System.out.println("Capture initialized");
 
 	    //parent.registerDispose(this);	    
 	    //register callback
@@ -231,33 +233,12 @@ public class CaptureMJPEG extends Thread {
 	    	System.out.println("Cannot set callback " + e.getMessage());
 	    }
 	}
-	
-	
-	
-	/**
-	 * Sets the adaptive frame size behavior.
-	 * @see it.lilik.capturemjpeg.CaptureMJPEG#setAdaptFrameSize
-	 * @return the adaptFrameSize
-	 */
-	public boolean isAdaptFrameSize() {
-		return adaptFrameSize;
-	}
-
-	/**
-	 * If <code>true</code> when a stream is initialized
-	 * the <code>parent</code> size is set to the image size.
-	 * 
-	 * @param adaptFrameSize the adaptFrameSize to set
-	 */
-	public void setAdaptFrameSize(boolean adaptFrameSize) {
-		this.adaptFrameSize = adaptFrameSize;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		System.out.println("Runnig");
+		//System.out.println("Runnig");
 		
 		BufferedInputStream is = null;
 		InputStream responseBody = null;
@@ -330,16 +311,16 @@ public class CaptureMJPEG extends Thread {
 							
 				byte[] img;
 				MJPEGInputStream mis = new MJPEGInputStream(is, boundary);
-				System.out.println("Created");
+				//System.out.println("Created");
 				try {
 					synchronized (method) {
 						img = mis.readImage();
-						System.out.println("Read");
+						//System.out.println("Read");
 					}
 					//synchronized (lastImage) {
 						if (captureEventMethod != null) {
 					            try {
-					            	System.out.println("Call invoker");
+					            	//System.out.println("Call invoker");
 					            	Image tmp = getImage(new ByteArrayInputStream(img));
 					            	captureEventMethod.invoke(parent, new Object[] { 
 					            		  this.assign(tmp) });
@@ -466,19 +447,23 @@ public class CaptureMJPEG extends Thread {
 	 * @return a reference to <code>lastImage</code>
 	 */
 	private Image assign(Image tmp) {
-		//BufferedImage bi = (BufferedImage) tmp;
-		//if(this.changeFrameSize) {
-			//this.changeFrameSize = false;
-			//this.parent.frame.setSize(bi.getWidth(),
-			//		bi.getHeight());
-		//}
-		/*if( lastImage.height != tmp.height || lastImage.width != tmp.width)
-			lastImage.init(tmp.width, tmp.height, PImage.RGB);
-		lastImage.copy(tmp, 0, 0, tmp.width, tmp.height,
-				0, 0, lastImage.width, lastImage.height);*/
 
 		lastImage = tmp;
-		return ImageUtils.scaleImage(parent.getWidth(),parent.getHeight(),(BufferedImage)tmp);
+		
+		BufferedImage img;
+		if(changeImageSize){
+			// The image is shown into a mosaic, resize it
+			img = (BufferedImage) ImageUtils.scaleImage(parent.getWidth(),parent.getHeight(),(BufferedImage)tmp);
+		} else { 
+			// The image is not part of a mosaic, let's show it as it is
+			img = (BufferedImage) tmp;
+			
+			// Let's resize frame and image window according to the image
+			parent.setSize(img.getWidth(), img.getHeight() );
+			parent.setFrameSize(img.getWidth(), img.getHeight());
+		}
+		
+		return img;
 	}
 
 }
