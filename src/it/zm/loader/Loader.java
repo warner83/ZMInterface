@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,12 +26,49 @@ public class Loader {
 
 	private static ZmHashAuth authenticator;
 	
+	private static JFrame frame;
+	
+	private static JMenuBar eventMenuBar;
+	
+	private static JMenu eventMenu;
+	
+	private static String baseUrl;
+	
+	private static String auth;
+		
+	public static void initMenu(DataCameras dc){
+		eventMenuBar = new JMenuBar();
+		
+		List<String> IDs = dc.getIDs();
+		List<String> names = dc.getNames();
+		
+		// For each monitor add an entry
+		
+		JMenu eventMenu = new JMenu();
+	    
+		eventMenuBar.add(eventMenu);
+    
+		eventMenu.setText("Eventi");
+		
+		for(int i=0;i<names.size(); ++i){
+			
+			JMenuItem text = new JMenuItem();
+			
+			text.setText(names.get(i));
+			
+			text.addActionListener(new MenuListener(baseUrl, auth, IDs.get(i) ));
+			
+			eventMenu.add(text);
+		}
+		
+		frame.setJMenuBar(eventMenuBar);
+	}
 	
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				
-				String baseUrl = new String("http://192.168.69.104/zm/index.php");
+				baseUrl = new String("http://192.168.69.104/zm/index.php");
 				
 				// Create Http connection for everyone
 				HttpClient client = new DefaultHttpClient();
@@ -44,7 +83,7 @@ public class Loader {
 				// Authenticate
 				authenticator = new ZmHashAuth(baseUrl, "admin", "laboratorio55", client);
 
-				String auth = authenticator.getAuthHash();
+				auth = authenticator.getAuthHash();
 				
 				// Get number of cameras
 				DataCameras dc = new DataCameras(baseUrl, client);
@@ -52,7 +91,7 @@ public class Loader {
 				int numCameras = dc.getNumCameras();
 
 				// Create the superframe
-				JFrame frame = new JFrame();
+				frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setSize(playGroundX, playGroundY);
 				frame.setResizable(false);
@@ -81,9 +120,32 @@ public class Loader {
 					e.printStackTrace();
 				}
 				
+				// Initialize menu
+				initMenu(dc);
+				
 				frame.setVisible(true);
 			}
 		});
     }
 
+}
+
+class MenuListener implements ActionListener{
+
+	String baseUrl;
+	String auth;
+	String ID;
+	
+	public MenuListener(String b, String a, String i){
+		baseUrl = b;
+		auth = a;
+		ID = i;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		EventsTimeline c = new EventsTimeline();
+		c.show();
+	}
+	
 }

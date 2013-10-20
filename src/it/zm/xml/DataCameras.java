@@ -62,4 +62,26 @@ public class DataCameras extends DataManagement {
 		
 		return ret;
 	} 
+	
+	public List getNames(){
+		List<String> ret = new ArrayList<String>();
+		
+		String expression = "/ZM_XML/MONITOR_LIST/MONITOR[ENABLED=1]/NAME";
+		
+		try {
+			NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+						
+			for(int i = 0; i < nodeList.getLength(); ++i ){
+				ret.add(new String(nodeList.item(i).getFirstChild().getNodeValue()));
+			}
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return null;
+		}
+		
+		return ret;
+	}
 }
