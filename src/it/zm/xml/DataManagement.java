@@ -36,7 +36,7 @@ public abstract class DataManagement {
 	
 	public DataManagement(String baseUrl, HttpClient cl){
 		xPath = XPathFactory.newInstance().newXPath();
-		url = baseUrl + getOperationSuffix(); // Final URL, base + suffix of the operation
+		url = baseUrl; // Final URL will be base + suffix of the operation
 		init = false;
 		client = cl;
 	}	
@@ -45,7 +45,15 @@ public abstract class DataManagement {
 	
 	// Maybe this should be performed automatically when the object is created
 	public void fetchData(){
-		HttpGet request = new HttpGet(url);
+		
+		// Update url... just in case
+		String u = url + getOperationSuffix();
+		
+		System.out.println(u);
+		
+		HttpGet request = new HttpGet(u);
+		
+		//System.out.println(u);
 		 
 		request.addHeader("User-Agent", "Mozilla");
 		HttpResponse response;

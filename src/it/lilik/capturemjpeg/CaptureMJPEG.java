@@ -19,6 +19,7 @@
 package it.lilik.capturemjpeg;
 
 import it.zm.interfaces.ImageWindow;
+import it.zm.util.ImageUtils;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -468,32 +469,3 @@ public class CaptureMJPEG extends Thread {
 
 }
 
-class ImageUtils {
-
-    public static BufferedImage scaleImage(int width, int height, String filename) {
-        BufferedImage bi;
-        try {
-            ImageIcon ii = new ImageIcon(filename);
-            bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = (Graphics2D) bi.createGraphics();
-            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-            g2d.drawImage(ii.getImage(), 0, 0, width, height, null);
-        } catch (Exception e) {
-            return null;
-        }
-        return bi;
-    }
-
-    static Image scaleImage(int width, int height, BufferedImage filename) {
-        BufferedImage bi;
-        try {
-            bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = (Graphics2D) bi.createGraphics();
-            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-            g2d.drawImage(filename, 0, 0, width, height, null);
-        } catch (Exception e) {
-            return null;
-        }
-        return bi;
-    }
-}

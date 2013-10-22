@@ -35,6 +35,8 @@ public class Loader {
 	private static String baseUrl;
 	
 	private static String auth;
+	
+	private static HttpClient client;
 		
 	public static void initMenu(DataCameras dc){
 		eventMenuBar = new JMenuBar();
@@ -56,7 +58,7 @@ public class Loader {
 			
 			text.setText(names.get(i));
 			
-			text.addActionListener(new MenuListener(baseUrl, auth, IDs.get(i) ));
+			text.addActionListener(new MenuListener(baseUrl, auth, IDs.get(i), client));
 			
 			eventMenu.add(text);
 		}
@@ -71,7 +73,7 @@ public class Loader {
 				baseUrl = new String("http://192.168.69.104/zm/index.php");
 				
 				// Create Http connection for everyone
-				HttpClient client = new DefaultHttpClient();
+				client = new DefaultHttpClient();
 				
 				// Get screen resolution
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -135,16 +137,18 @@ class MenuListener implements ActionListener{
 	String baseUrl;
 	String auth;
 	String ID;
+	HttpClient client;
 	
-	public MenuListener(String b, String a, String i){
+	public MenuListener(String b, String a, String i, HttpClient h){
 		baseUrl = b;
 		auth = a;
 		ID = i;
+		client = h;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		EventsTimeline c = new EventsTimeline();
+		EventsTimeline c = new EventsTimeline(baseUrl,client,ID);
 		c.show();
 	}
 	
