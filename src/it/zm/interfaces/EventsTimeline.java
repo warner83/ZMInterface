@@ -30,16 +30,18 @@ public class EventsTimeline{
 	static JPanel pnlEvents;
 	
 	static HttpClient client;
+	static String auth;
 	static String baseUrl;
 	static int page; // Actual page to be shown
 	static String ID; // Monitor ID
 	static DataEvents de;
 	
-	public EventsTimeline(String base, HttpClient cl, String id){
+	public EventsTimeline(String base, HttpClient cl, String id, String a){
 		client = cl;
 		baseUrl = base;
 		page = 0;
 		ID = id;
+		auth = a;
 	}
 
 	public void show(){
@@ -67,8 +69,8 @@ public class EventsTimeline{
 				@Override
 		        public Class getColumnClass(int column)
 		        {
-
-		            if (column == 3)
+					// Show icon for image or video
+		            if (column == 3 || column == 4)
 		            {
 
 		                return ImageIcon.class;
@@ -104,19 +106,24 @@ public class EventsTimeline{
 		
 		// Set table properties
 		
+		// Add mouse listener
+		tblEvents.addMouseListener(new clickCell_Action());
+		
 		//No resize/reorder
 		tblEvents.getTableHeader().setResizingAllowed(false);
 		tblEvents.getTableHeader().setReorderingAllowed(false);
 
 		//Single cell selection
-		tblEvents.setColumnSelectionAllowed(false);
+		tblEvents.setColumnSelectionAllowed(true);
 		tblEvents.setRowSelectionAllowed(true);
 		tblEvents.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		mtblEvents.addColumn("ID");
 		mtblEvents.addColumn("Data");
 		mtblEvents.addColumn("Durata");
-		mtblEvents.addColumn("Immagine allarme");
+		mtblEvents.addColumn("Visualizza immagine");
+		mtblEvents.addColumn("Visualizza filmato");
+		mtblEvents.addColumn("Maxframeid");
 		
 		// Fetch events
 		de = new DataEvents(baseUrl, client, ID);
@@ -127,16 +134,15 @@ public class EventsTimeline{
 		mtblEvents.setRowCount(li.size());
 		for(int i =0; i < li.size(); ++i ){
 			MonitorEvent e = (MonitorEvent) li.get(i);
-						
-			System.out.println(e.id + " " + e.time + " " + e.duration + " ");
-			
+									
 			mtblEvents.setValueAt(e.id, i, 0);
 			mtblEvents.setValueAt(e.time, i, 1);
 			mtblEvents.setValueAt(e.duration, i, 2);
+			mtblEvents.setValueAt(e.maxframeid, i, 5); // Hide this field
 			tblEvents.setRowHeight(i, 50);
 			
-			ImageIcon ic = getImageForEvent(e);
-			mtblEvents.setValueAt(ic, i, 3);
+			mtblEvents.setValueAt(null, i, 3); // TODO set icon
+			mtblEvents.setValueAt(null, i, 4); // TODO set icon
 		}
 		
 		//Make frame visible
@@ -145,19 +151,18 @@ public class EventsTimeline{
 
 	}
 	
-	private ImageIcon getImageForEvent(MonitorEvent ev){
-		ImageIcon bi = null;
+	private static BufferedImage getUnscaledImageForEvent(String evID, String maxframeid){
+		BufferedImage bi = null;
+		// Get the id of the frame
+		Integer numFrame = Integer.parseInt(maxframeid);
+		String frame = String.format("%03d", numFrame);;
+		
+		// Get the string of the image in this format "http://192.168.69.104/zm/events/3/2494859/011-analyse.jpg"
+		String base = new String(baseUrl.replaceAll("index.php", ""));
+		String u =	base+"events/"+ID+"/"+evID+"/"+frame+"-analyse.jpg";
+				
 		try {
-			// Get the id of the frame
-			Integer numFrame = Integer.parseInt(ev.maxframeid);
-			String frame = String.format("%03d", numFrame);;
-			
-			// Get the string of the image in this format "http://192.168.69.104/zm/events/3/2494859/011-analyse.jpg"
-			String base = new String(baseUrl.replaceAll("index.php", ""));
-			String u =	base+"events/"+ID+"/"+ev.id+"/"+frame+"-analyse.jpg";
-			
-			System.out.println(u);
-			bi = new ImageIcon( ImageUtils.scaleImage(50,50, new URL(u) ) );
+			bi = ImageUtils.createImage(new URL(u));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,6 +209,36 @@ public class EventsTimeline{
 				mtblEvents.setValueAt(ev.duration, i, 2);
 			}
 		}
+	}
+	
+	static class clickCell_Action extends MouseAdapter{
+		  public void mouseClicked(MouseEvent e) {
+		    if (e.getClickCount() == 2) {
+		      JTable target = (JTable)e.getSource();
+		      int row = target.getSelectedRow();
+		      int column = target.getSelectedColumn();
+		      if(column == 3 || column == 4){
+		    	  String event = (String) target.getValueAt(row, 0); // Get event id
+		    	  String maxframeid = (String) target.getValueAt(row, 5);
+		    	  
+		    	  if(column == 3){
+		    		  // Show the image with the alarm
+		    		  BufferedImage ic = getUnscaledImageForEvent(event, maxframeid);
+		    		  
+		    		  // Get the image
+		    		  SingleImageWindow iw = new SingleImageWindow(ic);
+		    		  
+		    		  iw.show();
+		    	  } else if(column == 4){
+		    		  // Show the event
+		    		  
+		    		  EventWindow ew = new EventWindow(baseUrl, ID, event, auth);
+		    		  
+		    		  ew.show();
+		    	  }
+		      }
+		    }
+		  }
 	}
 	
 }

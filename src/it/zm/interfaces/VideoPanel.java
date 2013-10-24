@@ -28,7 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 
-public class ImageWindow extends JPanel {
+public class VideoPanel extends JPanel {
 
 	public JFrame frame;
 	
@@ -43,7 +43,7 @@ public class ImageWindow extends JPanel {
 	/**
 	 * Create the application.
 	 */
-	public ImageWindow(String u, JFrame f, boolean res) {
+	public VideoPanel(String u, JFrame f, boolean res) {
 		frame = f;
 		url = u;
 		img = null;
@@ -135,7 +135,7 @@ class MouseHander implements MouseListener{
 		//frame.setResizable(false);
 		
 		// Create image view
-		ImageWindow window = new ImageWindow(url, frame, false);
+		VideoPanel window = new VideoPanel(url, frame, false);
 		
 		// Set visible
 		frame.setVisible(true);

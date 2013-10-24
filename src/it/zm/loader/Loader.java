@@ -111,11 +111,11 @@ public class Loader {
 						// Try to fill the grid of the superframe
 						
 						// Create image view
-						ImageWindow window = new ImageWindow("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
-										+ IDs.get(i) + "&scale=100&maxfps=5&buffer=1000&"+auth, frame, true);
+						//VideoPanel window = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
+										//+ IDs.get(i) + "&scale=100&maxfps=5&buffer=1000&"+auth, frame, true);
 						
 						// Set its size and position
-						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
+						//window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
 					}
 
 				} catch (Exception e) {
@@ -125,6 +125,7 @@ public class Loader {
 				// Initialize menu
 				initMenu(dc);
 				
+				// Showtime
 				frame.setVisible(true);
 			}
 		});
@@ -148,7 +149,7 @@ class MenuListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		EventsTimeline c = new EventsTimeline(baseUrl,client,ID);
+		EventsTimeline c = new EventsTimeline(baseUrl,client,ID, auth);
 		c.show();
 	}
 	

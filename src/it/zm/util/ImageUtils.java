@@ -6,6 +6,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class ImageUtils {
@@ -24,6 +25,30 @@ public class ImageUtils {
         return bi;
     }
 
+    public static BufferedImage createImage(URL ur) {
+        BufferedImage bi;
+        try {
+        	bi = ImageIO.read(ur);
+        } catch (Exception e) {
+            return null;
+        }
+        return bi;
+    }
+    
+    public static BufferedImage createImage(ImageIcon ii) {
+        BufferedImage bi;
+        try {
+            bi = new BufferedImage(ii.getIconWidth(), ii.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = (Graphics2D) bi.createGraphics();
+            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+            g2d.drawImage(ii.getImage(), 0, 0, ii.getIconWidth(), ii.getIconHeight(), null);
+        } catch (Exception e) {
+        	System.out.println(e.getMessage());
+            return null;
+        }
+        return bi;
+    }
+    
     public static BufferedImage scaleImage(int width, int height, URL ur) {
         BufferedImage bi;
         try {

@@ -18,7 +18,7 @@
  */
 package it.lilik.capturemjpeg;
 
-import it.zm.interfaces.ImageWindow;
+import it.zm.interfaces.VideoPanel;
 import it.zm.util.ImageUtils;
 
 import java.awt.Graphics2D;
@@ -109,7 +109,7 @@ public class CaptureMJPEG extends Thread {
 	private CircularBuffer buffer;
 	
 	/** the parent <code>PApplet</code> **/
-	private ImageWindow parent;
+	private VideoPanel parent;
 	/** callback method **/
 	private Method captureEventMethod;
 	/** Last processed image **/
@@ -185,7 +185,7 @@ public class CaptureMJPEG extends Thread {
 	/**
 	 * Creates a <code>CaptureMJPEG</code> without HTTP Auth credential
 	 */
-	public CaptureMJPEG(ImageWindow parent, String url) {
+	public CaptureMJPEG(VideoPanel parent, String url) {
 		this(parent, url, null, null);
 	}
 	
@@ -197,7 +197,7 @@ public class CaptureMJPEG extends Thread {
 	 * @param username HTTP AUTH username
 	 * @param password HTTP AUTH password
 	 */
-	public CaptureMJPEG(ImageWindow parent,
+	public CaptureMJPEG(VideoPanel parent,
 			String url, String username, String password) {
 		this.lastImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB );
 		//this.lastImage.init(parent.width, parent.height, PImage.RGB);
