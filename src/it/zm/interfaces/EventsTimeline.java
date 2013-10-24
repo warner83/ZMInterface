@@ -141,8 +141,16 @@ public class EventsTimeline{
 			mtblEvents.setValueAt(e.maxframeid, i, 5); // Hide this field
 			tblEvents.setRowHeight(i, 50);
 			
-			mtblEvents.setValueAt(null, i, 3); // TODO set icon
-			mtblEvents.setValueAt(null, i, 4); // TODO set icon
+			URL imgURL = ClassLoader.getSystemResource("resources/image.png");
+			ImageIcon imgIcon = new ImageIcon(imgURL); // Get icon
+			imgIcon = ImageUtils.createImage(50, 50, imgIcon); // Resize
+
+			URL videoURL = ClassLoader.getSystemResource("resources/play.png");
+			ImageIcon videoIcon = new ImageIcon(videoURL); // Get icon
+			videoIcon = ImageUtils.createImage(50, 50, videoIcon); // Resize
+			
+			mtblEvents.setValueAt(imgIcon, i, 3); // TODO set icon
+			mtblEvents.setValueAt(videoIcon, i, 4); // TODO set icon
 		}
 		
 		//Make frame visible
