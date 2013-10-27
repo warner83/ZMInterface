@@ -84,4 +84,59 @@ public class DataCameras extends DataManagement {
 		
 		return ret;
 	}
+	
+	public int getWidth(String id){
+		int ret=0;
+		
+		String expression = "/ZM_XML/MONITOR_LIST/MONITOR[ID="+id+"]/WIDTH";
+		
+		try {
+			NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+						
+			ret = Integer.valueOf(new String(nodeList.item(0).getFirstChild().getNodeValue()));
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return 0;
+		}
+		
+		return ret;
+	}
+	
+	public int getHeight(String id){
+		int ret=0;
+		
+		String expression = "/ZM_XML/MONITOR_LIST/MONITOR[ID="+id+"]/HEIGHT";
+		
+		try {
+			NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+						
+			ret = Integer.valueOf(new String(nodeList.item(0).getFirstChild().getNodeValue()));
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return 0;
+		}
+		
+		return ret;
+	}
+	
+	// This function evaluates the percentage of the image to be requested in order to optimize bandwidth
+	public int getPerc(String id, int width, int height){
+		int ret = 0;
+		
+		int imagew = getWidth(id);
+		int imageh = getHeight(id);
+				
+		double ratiow = (double) width / imagew * 100;
+		double ratioh = (double) height / imageh * 100;
+		
+		ret = (int) Math.ceil( Math.max(ratiow, ratioh) );
+		
+		return ret;
+	}
 }

@@ -135,7 +135,6 @@ public class CaptureMJPEG extends Thread {
 	 */
 	public void startCapture() {
 		this.start();
-		//System.out.println("Caprure started");
 	}
 	/**
 	 * Stops this thread when the current image if finished
@@ -238,14 +237,22 @@ public class CaptureMJPEG extends Thread {
 	/* (non-Javadoc)
 	 * @see java.lang.Thread#run()
 	 */
-	public void run() {
-		//System.out.println("Runnig");
-		
+	public void run() {		
 		BufferedInputStream is = null;
 		InputStream responseBody = null;
 		String boundary = "";
 
 		while(!this.shouldStop){
+			
+			if(!parent.isFocused()){ // Not focused -> wait one second
+				try {
+					java.lang.Thread.sleep(1000L);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				continue;
+			}
 			
 			// Open HTTP client
 			try {
@@ -306,7 +313,7 @@ public class CaptureMJPEG extends Thread {
 			while (!this.shouldStop) {
 	
 				synchronized (this.method) {
-							this.buffer.clear();
+					this.buffer.clear();
 							
 				}	//end synchronized			
 							
@@ -343,6 +350,9 @@ public class CaptureMJPEG extends Thread {
 					
 					break;
 				}
+				
+				if(!parent.isFocused())
+					break;
 			}
 			
 			// Reading from stream failed -> let's close the stream, in the next occurrency it'll be opened again...

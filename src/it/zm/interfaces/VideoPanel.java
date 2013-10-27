@@ -110,8 +110,12 @@ public class VideoPanel extends JPanel {
         BufferedImage bi = (BufferedImage) img;
         
         changeImage(bi);
-	}
+   	}
 
+	public Boolean isFocused(){
+		return frame.isFocused();
+	}
+	
 	public String getName() {
 		return new String("ImageWindow");
 	}
@@ -135,7 +139,9 @@ class MouseHander implements MouseListener{
 		//frame.setResizable(false);
 		
 		// Create image view
-		url = url.replace("scale=30", "scale=100"); // I want a full size stream of images
+		url = url.replace("scale=", "scole=");
+		url += "scale=100"; // Worse thing ever done, replace with regexpr
+		System.out.print(url);
 		VideoPanel window = new VideoPanel(url, frame, false);
 		
 		// Set visible

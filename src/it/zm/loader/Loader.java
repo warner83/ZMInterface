@@ -110,14 +110,13 @@ public class Loader {
 				try {
 					for(int i=0; i < numCameras; ++i){
 						// Try to fill the grid of the superframe
-						
+												
 						// Create image view
 						VideoPanel window = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
-										+ IDs.get(i) + "&scale=20&maxfps=5&buffer=1000&"+auth, frame, true);
-						// TODO scale the image automatically based on the image size, evaluate the percentage!
+										+ IDs.get(i) + "&scale="+dc.getPerc(IDs.get(i), playGroundX/gridSize, playGroundY/gridSize)+"&maxfps=5&buffer=1000&"+auth, frame, true);
 						
 						// Set its size and position
-						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
+						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundY/gridSize);
 					}
 
 				} catch (Exception e) {
