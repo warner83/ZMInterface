@@ -60,5 +60,35 @@ public class DataEvents extends DataManagement {
 		
 		return ret;
 	}
+	
+	public Integer getNumEvents(){
+		Integer ret;
+		
+		String expression = "/ZM_XML/MONITOR_LIST/MONITOR[ID="+ID+"]/NUMEVENTS";
+		
+		try {
+			NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+						
+			ret = Integer.valueOf(nodeList.item(0).getFirstChild().getNodeValue());
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return 0;
+		}
+		
+		return ret;
+	}
+	
+	public Integer getPages(){
+		Integer evPerPage = Integer.valueOf(numEvents);
+		
+		Integer evs = getNumEvents();
+		
+		double pages = evs/evPerPage;
+		
+		return (int) Math.ceil(pages);
+	}
 
 }

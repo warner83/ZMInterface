@@ -135,6 +135,7 @@ class MouseHander implements MouseListener{
 		//frame.setResizable(false);
 		
 		// Create image view
+		url = url.replace("scale=30", "scale=100"); // I want a full size stream of images
 		VideoPanel window = new VideoPanel(url, frame, false);
 		
 		// Set visible

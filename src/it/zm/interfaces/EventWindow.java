@@ -36,7 +36,7 @@ public class EventWindow {
 	
 	public void show(){
 		frame = new JFrame ("Evento");
-		frame.setSize(100, 100); 
+		//frame.setSize(100, 100); 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
 		
 		System.out.println("http://192.168.69.104/cgi-bin/nph-zms?source=event&mode=jpeg&event="+eventID+"&monitor="

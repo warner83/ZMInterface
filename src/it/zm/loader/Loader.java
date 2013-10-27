@@ -97,6 +97,7 @@ public class Loader {
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setSize(playGroundX, playGroundY);
 				frame.setResizable(false);
+				frame.setLocationRelativeTo(null);
 				
 				// Evaluate the size of the grid
 				int gridSize = (int) Math.ceil(Math.sqrt(numCameras));
@@ -111,11 +112,12 @@ public class Loader {
 						// Try to fill the grid of the superframe
 						
 						// Create image view
-						//VideoPanel window = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
-										//+ IDs.get(i) + "&scale=100&maxfps=5&buffer=1000&"+auth, frame, true);
+						VideoPanel window = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
+										+ IDs.get(i) + "&scale=20&maxfps=5&buffer=1000&"+auth, frame, true);
+						// TODO scale the image automatically based on the image size, evaluate the percentage!
 						
 						// Set its size and position
-						//window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
+						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundX/gridSize);
 					}
 
 				} catch (Exception e) {

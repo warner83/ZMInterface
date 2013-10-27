@@ -36,6 +36,8 @@ public class EventsTimeline{
 	static String ID; // Monitor ID
 	static DataEvents de;
 	
+	static List eventList;
+	
 	public EventsTimeline(String base, HttpClient cl, String id, String a){
 		client = cl;
 		baseUrl = base;
@@ -78,6 +80,7 @@ public class EventsTimeline{
 		            return Object.class;
 		            // other code; default to Object.class
 		        }
+				
 		};
 		tblEvents = new JTable(mtblEvents);
 		stblEvents = new JScrollPane(tblEvents);
@@ -123,22 +126,20 @@ public class EventsTimeline{
 		mtblEvents.addColumn("Durata");
 		mtblEvents.addColumn("Visualizza immagine");
 		mtblEvents.addColumn("Visualizza filmato");
-		mtblEvents.addColumn("Maxframeid");
 		
 		// Fetch events
 		de = new DataEvents(baseUrl, client, ID);
 		de.setPage(new String(Integer.toString(page)));
 		de.fetchData();
-		List li = de.getAllEvents();
+		eventList = de.getAllEvents();
 		
-		mtblEvents.setRowCount(li.size());
-		for(int i =0; i < li.size(); ++i ){
-			MonitorEvent e = (MonitorEvent) li.get(i);
+		mtblEvents.setRowCount(eventList.size());
+		for(int i =0; i < eventList.size(); ++i ){
+			MonitorEvent e = (MonitorEvent) eventList.get(i);
 									
 			mtblEvents.setValueAt(e.id, i, 0);
 			mtblEvents.setValueAt(e.time, i, 1);
 			mtblEvents.setValueAt(e.duration, i, 2);
-			mtblEvents.setValueAt(e.maxframeid, i, 5); // Hide this field
 			tblEvents.setRowHeight(i, 50);
 			
 			URL imgURL = ClassLoader.getSystemResource("resources/image.png");
@@ -154,6 +155,7 @@ public class EventsTimeline{
 		}
 		
 		//Make frame visible
+		frmMain.setLocationRelativeTo(null);
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 
@@ -188,34 +190,43 @@ public class EventsTimeline{
 			
 			de.setPage(new String(Integer.toString(page)));
 			de.fetchData();
-			List li = de.getAllEvents();
+			eventList = de.getAllEvents();
 			
-			mtblEvents.setRowCount(li.size());
-			for(int i =0; i < li.size(); ++i ){
-				MonitorEvent ev = (MonitorEvent) li.get(i);
+			mtblEvents.setRowCount(eventList.size());
+			for(int i =0; i < eventList.size(); ++i ){
+				MonitorEvent ev = (MonitorEvent) eventList.get(i);
 											
 				mtblEvents.setValueAt(ev.id, i, 0);
 				mtblEvents.setValueAt(ev.time, i, 1);
 				mtblEvents.setValueAt(ev.duration, i, 2);
 			}
+			
+			lblEvents.setText(Integer.toString(page));
 		}
 	}
 	static class btnNext_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
+			int numPages = de.getPages();
+						
+			if(page == numPages) // Last page -> nothing to do
+				return;
+			
 			page++; // Hey there is an issue here, I have to detect the last page and stop incrementing
 			
 			de.setPage(new String(Integer.toString(page)));
 			de.fetchData();
-			List li = de.getAllEvents();
+			eventList = de.getAllEvents();
 			
-			mtblEvents.setRowCount(li.size());
-			for(int i =0; i < li.size(); ++i ){
-				MonitorEvent ev = (MonitorEvent) li.get(i);
+			mtblEvents.setRowCount(eventList.size());
+			for(int i =0; i < eventList.size(); ++i ){
+				MonitorEvent ev = (MonitorEvent) eventList.get(i);
 											
 				mtblEvents.setValueAt(ev.id, i, 0);
 				mtblEvents.setValueAt(ev.time, i, 1);
 				mtblEvents.setValueAt(ev.duration, i, 2);
 			}
+			
+			lblEvents.setText(Integer.toString(page));
 		}
 	}
 	
@@ -227,7 +238,8 @@ public class EventsTimeline{
 		      int column = target.getSelectedColumn();
 		      if(column == 3 || column == 4){
 		    	  String event = (String) target.getValueAt(row, 0); // Get event id
-		    	  String maxframeid = (String) target.getValueAt(row, 5);
+		    	  MonitorEvent ev = (MonitorEvent) eventList.get(row); // Get alarm frame id from the list of events
+		    	  String maxframeid = ev.maxframeid; // NOTE I do not convert the id because I assume there is no sorting in the table!
 		    	  
 		    	  if(column == 3){
 		    		  // Show the image with the alarm
