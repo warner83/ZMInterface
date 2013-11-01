@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -40,6 +41,10 @@ public class VideoPanel extends JPanel {
 	
 	BufferedImage img; // Img currently shown
 	
+	JSlider slider; 
+	
+	int position; // Position in the slider
+	
 	/**
 	 * Create the application.
 	 */
@@ -48,6 +53,8 @@ public class VideoPanel extends JPanel {
 		url = u;
 		img = null;
 		resize = res;
+		slider=null; // If this remain null there is no slider in the panel
+		position = 1;
 		
 		if(res){
 			// The image window has to be resized -> it is part of a mosaic, let's handle mouse click
@@ -73,6 +80,10 @@ public class VideoPanel extends JPanel {
 		frame.setSize(width , height);
 		frame.setLocationRelativeTo(null);
 	}
+	
+	public int getCurrentFrame(){
+		return position;
+	}
 
 	
 	/**
@@ -95,6 +106,14 @@ public class VideoPanel extends JPanel {
     
     public void changeImage(BufferedImage i){
     	img = i;
+    	
+    	position++;
+    	
+    	// Update the slider, if one
+    	if(slider != null){
+    		slider.setValue(position);
+    	}
+    	
     	this.repaint();
     }
 
@@ -121,6 +140,24 @@ public class VideoPanel extends JPanel {
 		return new String("ImageWindow");
 	}
 
+	public void setSlider(JSlider frameSlider) {
+		slider = frameSlider;
+	}
+
+	public void chengeStreamPosition(int fr) {
+		// Replace stream position in the url
+		url = url.replaceAll("frame=[^&]+","frame=" + fr);
+		
+		// Update URL
+		capture.setURL(url);
+		
+		// Update position and slider, if any
+		position = fr;
+    	if(slider != null){
+    		slider.setValue(position);
+    	}
+	}
+
 }
 
 // Manage click on a frame
@@ -139,8 +176,7 @@ class MouseHander implements MouseListener{
 		frame.setSize(300, 300);
 		
 		// Create image view
-		url = url.replace("scale=", "scole=");
-		url += "scale=100"; // Worse thing ever done, replace with regexpr
+		url = url.replaceAll("scale=[^&]+","scale=100");
 		System.out.print(url);
 		VideoPanel window = new VideoPanel(url, frame, false);
 		

@@ -143,7 +143,7 @@ public class CaptureMJPEG extends Thread {
 	public void stopCapture() {
 		this.shouldStop = true;
 	}
-
+	
 	/**
 	 * Changes the URI.<br>
 	 * A new connection will be performed after a complete

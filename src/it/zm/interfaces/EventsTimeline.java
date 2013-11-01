@@ -47,6 +47,10 @@ public class EventsTimeline{
 	}
 
 	public void show(){
+		
+		// TEST create the timebar
+		//EventsTimeBar timeBr = new EventsTimeBar();
+		
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
 		catch (ClassNotFoundException e) {}
@@ -62,7 +66,7 @@ public class EventsTimeline{
 		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
 
 		//Create controls
-		lblEvents = new JLabel ("1");
+		lblEvents = new JLabel ("0");
 		btnPrev = new JButton ("<<");
 		btnNext = new JButton (">>");
 		mtblEvents= new DefaultTableModel(){
@@ -152,6 +156,9 @@ public class EventsTimeline{
 			
 			mtblEvents.setValueAt(imgIcon, i, 3); 
 			mtblEvents.setValueAt(videoIcon, i, 4); 
+			
+			// TEST add events to time bar
+			//timeBr.addEvent(ID, e.duration, e.id, e.time);
 		}
 		
 		//Make frame visible
@@ -159,6 +166,8 @@ public class EventsTimeline{
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 
+		// TEST show time bar
+		//timeBr.show();
 	}
 	
 	private static BufferedImage getUnscaledImageForEvent(String evID, String maxframeid){
@@ -240,6 +249,7 @@ public class EventsTimeline{
 		    	  String event = (String) target.getValueAt(row, 0); // Get event id
 		    	  MonitorEvent ev = (MonitorEvent) eventList.get(row); // Get alarm frame id from the list of events
 		    	  String maxframeid = ev.maxframeid; // NOTE I do not convert the id because I assume there is no sorting in the table!
+		    	  String frames = ev.frames;
 		    	  
 		    	  if(column == 3){
 		    		  // Show the image with the alarm
@@ -252,7 +262,7 @@ public class EventsTimeline{
 		    	  } else if(column == 4){
 		    		  // Show the event
 		    		  
-		    		  EventWindow ew = new EventWindow(baseUrl, ID, event, auth);
+		    		  EventWindow ew = new EventWindow(baseUrl, ID, event, auth, frames);
 		    		  
 		    		  ew.show();
 		    	  }
