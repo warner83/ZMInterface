@@ -71,6 +71,7 @@ public class VideoPanel extends JPanel {
 	
 	public void setFrameSize(int width, int height){
 		frame.setSize(width , height);
+		frame.setLocationRelativeTo(null);
 	}
 
 	
@@ -136,7 +137,6 @@ class MouseHander implements MouseListener{
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(300, 300);
-		//frame.setResizable(false);
 		
 		// Create image view
 		url = url.replace("scale=", "scole=");

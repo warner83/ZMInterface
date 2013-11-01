@@ -150,8 +150,8 @@ public class EventsTimeline{
 			ImageIcon videoIcon = new ImageIcon(videoURL); // Get icon
 			videoIcon = ImageUtils.createImage(50, 50, videoIcon); // Resize
 			
-			mtblEvents.setValueAt(imgIcon, i, 3); // TODO set icon
-			mtblEvents.setValueAt(videoIcon, i, 4); // TODO set icon
+			mtblEvents.setValueAt(imgIcon, i, 3); 
+			mtblEvents.setValueAt(videoIcon, i, 4); 
 		}
 		
 		//Make frame visible
@@ -257,6 +257,8 @@ public class EventsTimeline{
 		    		  ew.show();
 		    	  }
 		      }
+		      
+		      target.clearSelection();
 		    }
 		  }
 	}

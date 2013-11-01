@@ -63,7 +63,7 @@ public class Loader {
 			eventMenu.add(text);
 		}
 		
-		frame.setJMenuBar(eventMenuBar);
+		frame.setJMenuBar(eventMenuBar);		
 	}
 	
     public static void main(String[] args) {
@@ -101,7 +101,6 @@ public class Loader {
 				
 				// Evaluate the size of the grid
 				int gridSize = (int) Math.ceil(Math.sqrt(numCameras));
-				System.out.println(gridSize);
 				
 				frame.setLayout(new GridLayout(gridSize,gridSize));
 				
