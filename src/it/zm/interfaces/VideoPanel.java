@@ -77,8 +77,10 @@ public class VideoPanel extends JPanel {
 	}
 	
 	public void setFrameSize(int width, int height){
-		frame.setSize(width , height);
-		frame.setLocationRelativeTo(null);
+		if(!(frame.getWidth() == width && frame.getHeight() == height)){ // Update size oly if needed
+			frame.setSize(width , height);
+			frame.setLocationRelativeTo(null);
+		}
 	}
 	
 	public int getCurrentFrame(){
