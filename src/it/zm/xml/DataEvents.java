@@ -48,7 +48,14 @@ public class DataEvents extends DataManagement {
 						
 			for(int i = 0; i < nodeList.getLength(); ++i ){
 				
-				ret.add(new MonitorEvent(nodeList.item(i)));
+				try{
+					ret.add(new MonitorEvent(nodeList.item(i)));
+				} catch (Exception e){
+					// This happens when an event which is being recorded is parsed
+					// FRAMES field null
+					// Just skip and go on parsing
+				}
+				
 			}
 			
 		} catch (XPathExpressionException e) {

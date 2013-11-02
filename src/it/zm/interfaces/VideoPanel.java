@@ -166,24 +166,31 @@ public class VideoPanel extends JPanel {
 class MouseHander implements MouseListener{
 	String url;
 	
+	JFrame frame;
+	
 	public MouseHander(String u){
 		url = u;
+		frame = null;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// Create the superframe
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(300, 300);
 		
-		// Create image view
-		url = url.replaceAll("scale=[^&]+","scale=100");
-		System.out.print(url);
-		VideoPanel window = new VideoPanel(url, frame, false);
-		
-		// Set visible
-		frame.setVisible(true);
+		// Create a new window only this is the first one or the old one has been closed
+		if( frame == null || !frame.isShowing() ){ 
+			// Create the superframe
+			frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setSize(300, 300);
+			
+			// Create image view
+			url = url.replaceAll("scale=[^&]+","scale=100");
+			System.out.print(url);
+			VideoPanel window = new VideoPanel(url, frame, false);
+			
+			// Set visible
+			frame.setVisible(true);
+		}
 	}
 
 	@Override

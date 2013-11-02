@@ -38,7 +38,7 @@ public class Loader {
 	
 	private static HttpClient client;
 		
-	public static void initMenu(DataCameras dc){
+	public static void initEventMenu(DataCameras dc){
 		eventMenuBar = new JMenuBar();
 		
 		List<String> IDs = dc.getIDs();
@@ -123,7 +123,7 @@ public class Loader {
 				}
 				
 				// Initialize menu
-				initMenu(dc);
+				initEventMenu(dc);
 				
 				// Showtime
 				frame.setVisible(true);

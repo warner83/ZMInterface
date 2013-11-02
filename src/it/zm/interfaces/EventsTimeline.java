@@ -49,7 +49,7 @@ public class EventsTimeline{
 	public void show(){
 		
 		// TEST create the timebar
-		//EventsTimeBar timeBr = new EventsTimeBar();
+		EventsTimeBar timeBr = new EventsTimeBar();
 		
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -139,8 +139,16 @@ public class EventsTimeline{
 		
 		mtblEvents.setRowCount(eventList.size());
 		for(int i =0; i < eventList.size(); ++i ){
+			
 			MonitorEvent e = (MonitorEvent) eventList.get(i);
 									
+			// TEST add min date
+			if(i == 0){
+				timeBr.setMaxDate(e.time);
+			} else if( i == eventList.size() - 1 ){
+				timeBr.setMinDate(e.time);
+			}
+			
 			mtblEvents.setValueAt(e.id, i, 0);
 			mtblEvents.setValueAt(e.time, i, 1);
 			mtblEvents.setValueAt(e.duration, i, 2);
@@ -158,7 +166,7 @@ public class EventsTimeline{
 			mtblEvents.setValueAt(videoIcon, i, 4); 
 			
 			// TEST add events to time bar
-			//timeBr.addEvent(ID, e.duration, e.id, e.time);
+			timeBr.addEvent(ID, e.duration, e.id, e.time);
 		}
 		
 		//Make frame visible
