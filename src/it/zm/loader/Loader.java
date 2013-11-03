@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.zm.auth.ZmHashAuth;
+import it.zm.data.ConfigData;
 import it.zm.interfaces.*;
 import it.zm.xml.DataCameras;
 
@@ -38,6 +39,8 @@ public class Loader {
 	private static String auth;
 	
 	private static HttpClient client;
+	
+	private static ConfigData confData;
 		
 	public static void initMenu(DataCameras dc){
 		menuBar = new JMenuBar();
@@ -86,7 +89,7 @@ public class Loader {
 		
 		openConfig.setText("Configura applicazione");
 		
-		openConfig.addActionListener(new ConfigMenuListener());
+		openConfig.addActionListener(new ConfigMenuListener(confData));
 		
 		appMenu.add(openConfig);
 
@@ -101,13 +104,32 @@ public class Loader {
 				// Create the superframe
 				frame = new JFrame();
 				
-				baseUrl = new String("http://192.168.69.104/zm/index.php");
+				// Create configuration data structure
+				confData = new ConfigData();
+				
+				if(!confData.checkConfigFile()){
+					// We don't have a configuration file
+					System.out.println("No conf file found");
+					
+					ConfigWindow cw = new ConfigWindow(confData);
+					
+					// This will wait for the dialog
+					cw.setVisible(true);
+					
+					// Got configuration data -> save them
+					confData.save();
+				} else {
+					// We have a configuration file -> load data
+					confData.load();
+				}
+				
+				baseUrl = new String("http://"+confData.baseUrl+"/zm/index.php");
 				
 				// Create Http connection for everyone
 				client = new DefaultHttpClient();
 				
 				// Authenticate
-				authenticator = new ZmHashAuth(baseUrl, "admin", "laboratorio55", client);
+				authenticator = new ZmHashAuth(baseUrl, confData.username, confData.password, client);
 
 				auth = authenticator.getAuthHash();
 				
@@ -138,7 +160,7 @@ public class Loader {
 						// Try to fill the grid of the superframe
 												
 						// Create image view
-						VideoPanel window = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?mode=jpeg&monitor="
+						VideoPanel window = new VideoPanel("http://"+confData.baseUrl+"/cgi-bin/nph-zms?mode=jpeg&monitor="
 										+ IDs.get(i) + "&scale="+dc.getPerc(IDs.get(i), playGroundX/gridSize, playGroundY/gridSize)+"&maxfps=5&buffer=1000&"+auth, frame, true);
 						
 						// Set its size and position
@@ -243,16 +265,19 @@ class FullScreenMenuListener implements ActionListener{
 }
 
 class ConfigMenuListener implements ActionListener{
+	ConfigData config;
 
-
-	public ConfigMenuListener(){
-
+	public ConfigMenuListener(ConfigData cd){
+		config = cd;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ConfigWindow frame = new ConfigWindow();
+		ConfigWindow frame = new ConfigWindow(config);
 		frame.setVisible(true);
+		
+		// Save
+		config.save();
 	}
 	
 }

@@ -1,6 +1,8 @@
 package it.zm.interfaces;
 
 import java.awt.BorderLayout;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JSlider;
@@ -35,7 +37,18 @@ public class EventWindow implements ChangeListener {
 	int frames;
 	
 	public EventWindow(String base, String id, String eID, String a, String f){
-		baseUrl = base;
+		// I need only the host
+		// TODO uniform the way the url is handled!
+		
+		try {
+			URL aURL;
+			aURL = new URL(base);
+			baseUrl = aURL.getHost();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		eventID = eID;
 		auth = a;
 		ID = id;
@@ -57,10 +70,10 @@ public class EventWindow implements ChangeListener {
 		
 		// Create the panel
 		
-		System.out.println("http://192.168.69.104/cgi-bin/nph-zms?source=event&mode=jpeg&event="+eventID+"&monitor="
+		System.out.println("http://"+baseUrl+"/cgi-bin/nph-zms?source=event&mode=jpeg&event="+eventID+"&monitor="
 				+ ID + "&frame=1&scale=100&maxfps=5&buffer=1000&replay=single&"+auth);
 		
-		iw = new VideoPanel("http://192.168.69.104/cgi-bin/nph-zms?source=event&mode=jpeg&event="+eventID+"&monitor="
+		iw = new VideoPanel("http://"+baseUrl+"/cgi-bin/nph-zms?source=event&mode=jpeg&event="+eventID+"&monitor="
 				+ ID + "&frame=1&scale=100&maxfps=5&buffer=1000&replay=single&"+auth, frame, false);
 	
 		// Add the panel
