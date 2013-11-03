@@ -346,11 +346,13 @@ public class CaptureMJPEG extends Thread {
 				        }
 					//}
 				} catch (IOException e) {
-					ErrorImage error = new ErrorImage (e.getLocalizedMessage());
+					/*ErrorImage error = new ErrorImage (e.getLocalizedMessage());
 	
 					setErrorImage(error);
 					
-					break;
+					break;*/
+					
+					// Do nothing, just try to restart the stream and we'll see
 				}
 				
 				if(!parent.isFocused())
@@ -379,35 +381,14 @@ public class CaptureMJPEG extends Thread {
 
 		tmp = bi;
 		return tmp;
-		
-		/*int width = bi.getWidth(null);
-		int height = bi.getHeight(null);
-		int[] pixels = new int[width * height];
-		PixelGrabber pg =
-				new PixelGrabber(bi, 0, 0, width, height, pixels, 0, width);
-		try {
-				pg.grabPixels();
-		} catch (InterruptedException e) { }
 
-		tmp = new PImage(width,height);
-		tmp.loadPixels();
-		for (int i = 0; i < width * height; i++) {
-				tmp.pixels[i] = pixels[i];
-		}
-		tmp.updatePixels();
-
-		return tmp;*/	
 	}
 
 	private void setErrorImage(ErrorImage error) {
 		  
       	try {
-      	  // Load loading image
-  		  URL imgURL = ClassLoader.getSystemResource("resources/errore.jpg");
-  		  BufferedImage img = ImageUtils.scaleImage(400, 300, imgURL); // Resize
-      		
-			captureEventMethod.invoke(parent, new Object[] { 
-				  this.assign(img) });
+     		captureEventMethod.invoke(parent, new Object[] { 
+				  this.assign(error) });
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
