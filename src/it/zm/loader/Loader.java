@@ -79,7 +79,10 @@ public class Loader {
 		
 		JMenuItem fullScreen = new JMenuItem();
 		
-		fullScreen.setText("Attiva full screen");
+		if(!confData.fullOnActive)
+			fullScreen.setText("Attiva full screen");
+		else 
+			fullScreen.setText("Disattiva full screen");
 		
 		fullScreen.addActionListener(new FullScreenMenuListener(frame, false, fullScreen));
 		
@@ -188,9 +191,11 @@ public class Loader {
 				frame.setLocationRelativeTo(null);
 				
 				// Full size
-	            //frame.setResizable(false);
-	            //frame.setUndecorated(true);
-	            
+				if(confData.fullOnActive){
+					frame.setResizable(false);
+	            	frame.setUndecorated(true);
+				}
+	            	
 	            // Showtime
 				frame.setVisible(true);
 			}
@@ -278,6 +283,8 @@ class ConfigMenuListener implements ActionListener{
 		
 		// Save
 		config.save();
+		
+		// Changes will be applied at the next execution
 	}
 	
 }
