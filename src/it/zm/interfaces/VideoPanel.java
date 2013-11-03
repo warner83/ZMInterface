@@ -2,6 +2,7 @@ package it.zm.interfaces;
 
 
 import it.lilik.capturemjpeg.CaptureMJPEG;
+import it.zm.util.ImageUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -94,12 +95,22 @@ public class VideoPanel extends JPanel {
 	 * @throws MalformedURLException 
 	 */
 	private void initialize() throws MalformedURLException, IOException {
+		
+		  // Initialize frame
 		  frame.getContentPane().add(this);
 		
+		  // Load loading image
+		  URL imgURL = ClassLoader.getSystemResource("resources/caricamento.png");
+		  img = ImageUtils.scaleImage(400, 300, imgURL); // Resize
+		  frame.setLocationRelativeTo(null);
+		  frame.repaint();
+		  
+		  // Start capture
 		  capture = new CaptureMJPEG(this,url);
 		  capture.startCapture();
 		  
 		  capture.setResizable(resize);
+		 
 	}
 	
     public void paintComponent(Graphics g) {
@@ -181,7 +192,7 @@ class MouseHander implements MouseListener{
 			// Create the superframe
 			frame = new JFrame();
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			frame.setSize(300, 300);
+			frame.setSize(400, 300);
 			
 			// Create image view
 			url = url.replaceAll("scale=[^&]+","scale=100");

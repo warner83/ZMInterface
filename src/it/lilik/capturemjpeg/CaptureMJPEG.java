@@ -35,7 +35,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -398,21 +400,24 @@ public class CaptureMJPEG extends Thread {
 	}
 
 	private void setErrorImage(ErrorImage error) {
-		/*if (captureEventMethod != null) {
-			try {
-				PImage pi = new PImage (error);
-		    	captureEventMethod.invoke(parent, new Object[] { 
-		        		  this.assign(pi) });
-			} catch (Exception exc) {
-		          System.err.println("Disabling captureEvent() for " + 
-				  			 parent.getName() +
-		                     " because of an error.");
-		          exc.printStackTrace();
-		          captureEventMethod = null;
-			}
-		} else {
-			this.buffer.push (error.getAsInputStream());
-		}*/
+		  
+      	try {
+      	  // Load loading image
+  		  URL imgURL = ClassLoader.getSystemResource("resources/errore.jpg");
+  		  BufferedImage img = ImageUtils.scaleImage(400, 300, imgURL); // Resize
+      		
+			captureEventMethod.invoke(parent, new Object[] { 
+				  this.assign(img) });
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

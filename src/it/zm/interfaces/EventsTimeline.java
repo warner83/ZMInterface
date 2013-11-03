@@ -248,8 +248,16 @@ public class EventsTimeline{
 	}
 	
 	static class clickCell_Action extends MouseAdapter{
+		private static EventWindow ew;
+		private static SingleImageWindow iw;
+		
+		public clickCell_Action(){
+			ew = null;
+			iw = null;
+		}
+		
 		  public void mouseClicked(MouseEvent e) {
-		    if (e.getClickCount() == 2) {
+		    if (e.getClickCount() == 1) {
 		      JTable target = (JTable)e.getSource();
 		      int row = target.getSelectedRow();
 		      int column = target.getSelectedColumn();
@@ -260,17 +268,18 @@ public class EventsTimeline{
 		    	  String frames = ev.frames;
 		    	  
 		    	  if(column == 3){
+		    		  
 		    		  // Show the image with the alarm
 		    		  BufferedImage ic = getUnscaledImageForEvent(event, maxframeid);
 		    		  
 		    		  // Get the image
-		    		  SingleImageWindow iw = new SingleImageWindow(ic);
+		    		  iw = new SingleImageWindow(ic);
 		    		  
 		    		  iw.show();
 		    	  } else if(column == 4){
 		    		  // Show the event
 		    		  
-		    		  EventWindow ew = new EventWindow(baseUrl, ID, event, auth, frames);
+		    		  ew = new EventWindow(baseUrl, ID, event, auth, frames);
 		    		  
 		    		  ew.show();
 		    	  }

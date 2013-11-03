@@ -46,6 +46,7 @@ public class EventWindow implements ChangeListener {
 		frame = new JFrame ("Evento");
 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
+		frame.setSize(400, 300);
 		
 		// Create the slider
 		
