@@ -29,6 +29,8 @@ import java.net.MalformedURLException;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
+import it.lilik.capturemjpeg.TextImage;
+
 
 public class VideoPanel extends JPanel {
 
@@ -99,9 +101,8 @@ public class VideoPanel extends JPanel {
 		  // Initialize frame
 		  frame.getContentPane().add(this);
 		
-		  // Load loading image
-		  URL imgURL = ClassLoader.getSystemResource("resources/caricamento.png");
-		  img = ImageUtils.scaleImage(400, 300, imgURL); // Resize
+		  // Display text image for loading action
+		  img = new TextImage("Caricamento...");
 		  frame.setLocationRelativeTo(null);
 		  frame.repaint();
 		  

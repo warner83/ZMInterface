@@ -246,6 +246,8 @@ public class CaptureMJPEG extends Thread {
 
 		while(!this.shouldStop){
 			
+			this.isChangePending = false;
+			
 			if(!parent.isFocused()){ // Not focused -> wait one second
 				try {
 					java.lang.Thread.sleep(1000L);
@@ -261,7 +263,7 @@ public class CaptureMJPEG extends Thread {
 				this.client.executeMethod(this.method);
 				responseBody = this.method.getResponseBodyAsStream();
 				if (this.method.getStatusCode() == 404) {
-					ErrorImage error = new ErrorImage ("Unable to find '" +
+					TextImage error = new TextImage ("Unable to find '" +
 							this.method.getPath() + "' on host '" +
 							this.method.getURI().getHost() + "'");
 					setErrorImage (error);
@@ -272,9 +274,9 @@ public class CaptureMJPEG extends Thread {
 				}
 				is = new BufferedInputStream (responseBody);
 			} catch (Exception e) {
-				ErrorImage error;
+				TextImage error;
 				try {
-					error = new ErrorImage ("Unable to connect to '" +
+					error = new TextImage ("Unable to connect to '" +
 							this.method.getURI().getHost() + "' (" +
 							e.getLocalizedMessage() + ")");
 					setErrorImage (error);
@@ -346,16 +348,15 @@ public class CaptureMJPEG extends Thread {
 				        }
 					//}
 				} catch (IOException e) {
-					/*ErrorImage error = new ErrorImage (e.getLocalizedMessage());
+					TextImage error = new TextImage (e.getLocalizedMessage());
 	
 					setErrorImage(error);
 					
-					break;*/
+					break;
 					
-					// Do nothing, just try to restart the stream and we'll see
 				}
 				
-				if(!parent.isFocused())
+				if(!parent.isFocused() || this.isChangePending)
 					break;
 			}
 			
@@ -384,7 +385,7 @@ public class CaptureMJPEG extends Thread {
 
 	}
 
-	private void setErrorImage(ErrorImage error) {
+	private void setErrorImage(TextImage error) {
 		  
       	try {
      		captureEventMethod.invoke(parent, new Object[] { 
