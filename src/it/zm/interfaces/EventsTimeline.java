@@ -172,6 +172,7 @@ public class EventsTimeline{
 		//Make frame visible
 		frmMain.setLocationRelativeTo(null);
 		frmMain.setResizable(false);
+		frmMain.setAlwaysOnTop(true);
 		frmMain.setVisible(true);
 
 		// TEST show time bar

@@ -134,7 +134,9 @@ public class Loader {
 				// Authenticate
 				authenticator = new ZmHashAuth(baseUrl, confData.username, confData.password, client);
 
-				auth = authenticator.getAuthHash();
+				// Get auth token onluy if needed
+				if(authenticator.checkAuthNeeded())
+					auth = authenticator.getAuthHash();
 				
 				// Get number of cameras
 				DataCameras dc = new DataCameras(baseUrl, client);
@@ -279,6 +281,7 @@ class ConfigMenuListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ConfigWindow frame = new ConfigWindow(config);
+		frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
 		
 		// Save

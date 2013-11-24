@@ -25,6 +25,7 @@ public class SingleImageWindow extends JPanel{
 		frame.setSize(img.getWidth(), img.getHeight()); 
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
 		frame.setLocationRelativeTo(null);
+		frame.setAlwaysOnTop(true);
 		
 		// Add the image to the frame I auto-generated
 		frame.getContentPane().add(this);

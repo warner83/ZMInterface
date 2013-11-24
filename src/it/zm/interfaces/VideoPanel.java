@@ -61,7 +61,10 @@ public class VideoPanel extends JPanel {
 		
 		if(res){
 			// The image window has to be resized -> it is part of a mosaic, let's handle mouse click
-			this.addMouseListener(new MouseHander(url));
+			this.addMouseListener(new MouseHander(url, f));
+		} else {
+			// This image is not part of a mosaic, let it be always on top
+			frame.setAlwaysOnTop(true);
 		}
 		
 		try {
@@ -80,7 +83,7 @@ public class VideoPanel extends JPanel {
 	}
 	
 	public void setFrameSize(int width, int height){
-		if(!(frame.getWidth() == width && frame.getHeight() == height)){ // Update size oly if needed
+		if(!(frame.getWidth() == width && frame.getHeight() == height)){ // Update size only if needed
 			frame.setSize(width , height);
 			frame.setLocationRelativeTo(null);
 		}
@@ -178,11 +181,14 @@ public class VideoPanel extends JPanel {
 class MouseHander implements MouseListener{
 	String url;
 	
-	JFrame frame;
+	JFrame frame; // JFrame that will be created
 	
-	public MouseHander(String u){
+	JFrame parent; // Parent JFrame
+	
+	public MouseHander(String u, JFrame p){
 		url = u;
 		frame = null;
+		parent = p;
 	}
 
 	@Override

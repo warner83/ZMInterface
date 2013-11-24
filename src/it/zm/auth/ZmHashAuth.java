@@ -30,6 +30,47 @@ public class ZmHashAuth {
 		client = cl;
 	}
 	
+	public Boolean checkAuthNeeded(){
+		HttpGet request = new HttpGet(url);
+	 
+		request.addHeader("User-Agent", "Mozilla");
+		HttpResponse response;
+		try {
+			response = client.execute(request);
+			System.out.println("Response Code : " 
+	                + response.getStatusLine().getStatusCode());
+	 
+			BufferedReader rd = new BufferedReader(
+				new InputStreamReader(response.getEntity().getContent()));
+		 
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+			
+			System.out.println(result.toString());
+			
+			int ini = result.toString().indexOf("Password");
+			
+			if( ini == -1 )
+				return false;
+			else 
+				return true;
+			
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public String getAuthHash(){
 		String auth = "";
 				 
