@@ -161,7 +161,7 @@ public class Loader {
 				
 				// Get screen resolution
 				double width = device.getDisplayMode().getWidth();//screenSize.getWidth();
-				double height = device.getDisplayMode().getHeight() - 20; //screenSize.getHeight() - 20; // 20 seems to be the magic number for menu height
+				double height = device.getDisplayMode().getHeight(); //screenSize.getHeight() - 20; // 20 seems to be the magic number for menu height
 				
 				int playGroundX = (int)width, playGroundY = (int) height; 
 				
@@ -203,7 +203,7 @@ public class Loader {
 				frame.setSize(playGroundX, playGroundY);
 				frame.setResizable(false);
 				frame.setLocationRelativeTo(null);
-		        frame.setLocation(device.getDefaultConfiguration().getBounds().x, frame.getY());
+		        frame.setLocation(device.getDefaultConfiguration().getBounds().x, device.getDefaultConfiguration().getBounds().y);
 				
 				// Full size
 				if(confData.fullOnActive){
