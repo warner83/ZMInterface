@@ -42,6 +42,8 @@ public class VideoPanel extends JPanel {
 	
 	private boolean resize;
 	
+	private boolean bwSaver;
+	
 	BufferedImage img; // Img currently shown
 	
 	JSlider slider; 
@@ -58,6 +60,7 @@ public class VideoPanel extends JPanel {
 		resize = res;
 		slider=null; // If this remain null there is no slider in the panel
 		position = 1;
+		bwSaver = false;
 		
 		if(res){
 			// The image window has to be resized -> it is part of a mosaic, let's handle mouse click
@@ -87,6 +90,10 @@ public class VideoPanel extends JPanel {
 			frame.setSize(width , height);
 			frame.setLocationRelativeTo(null);
 		}
+	}
+	
+	public void setBwSaver(boolean bws){
+		bwSaver = bws;
 	}
 	
 	public int getCurrentFrame(){
@@ -151,6 +158,10 @@ public class VideoPanel extends JPanel {
 
 	public Boolean isFocused(){
 		return frame.isFocused();
+	}
+	
+	public Boolean bwSaverActive(){
+		return bwSaver;
 	}
 	
 	public String getName() {

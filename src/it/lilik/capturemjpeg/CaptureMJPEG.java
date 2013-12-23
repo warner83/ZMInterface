@@ -248,7 +248,7 @@ public class CaptureMJPEG extends Thread {
 			
 			this.isChangePending = false;
 			
-			if(!parent.isFocused()){ // Not focused -> wait one second
+			if(!parent.isFocused() && parent.bwSaverActive()){ // Not focused -> wait one second
 				try {
 					java.lang.Thread.sleep(1000L);
 				} catch (InterruptedException e) {
@@ -356,7 +356,7 @@ public class CaptureMJPEG extends Thread {
 					
 				}
 				
-				if(!parent.isFocused() || this.isChangePending)
+				if( (!parent.isFocused() && parent.bwSaverActive()) || this.isChangePending)
 					break;
 			}
 			

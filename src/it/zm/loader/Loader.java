@@ -180,6 +180,9 @@ public class Loader {
 						VideoPanel window = new VideoPanel("http://"+confData.baseUrl+"/cgi-bin/nph-zms?mode=jpeg&monitor="
 										+ IDs.get(i) + "&scale="+dc.getPerc(IDs.get(i), playGroundX/gridSize, playGroundY/gridSize)+"&maxfps=5&buffer=1000&"+auth, frame, true);
 						
+						// Set bw Saver policy if configured
+						window.setBwSaver(confData.bandwidthSaverActive);
+						
 						// Set its size and position
 						window.setPosAndSize((int)i%gridSize, (int)i/gridSize ,playGroundX/gridSize ,playGroundY/gridSize);
 					}

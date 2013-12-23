@@ -11,6 +11,7 @@ public class ConfigData {
 	public String username;
 	public String password;
 	public Boolean fullOnActive;
+	public Boolean bandwidthSaverActive;
 	
 	// Save and handle properties
 	private Properties prop;
@@ -23,11 +24,13 @@ public class ConfigData {
 		prop.setProperty("username", "admin");
 		prop.setProperty("password", "admin");
 		prop.setProperty("fullOnActive", "false");
+		prop.setProperty("bandwidthSaverActive", "false");
 		
 		baseUrl = "localhost";
 		username = "admin";
 		password = "admin";
 		fullOnActive = false;
+		bandwidthSaverActive = false;
 	}
 	
 	public Boolean save(){
@@ -36,6 +39,7 @@ public class ConfigData {
 		prop.setProperty("username", username);
 		prop.setProperty("password", password);
 		prop.setProperty("fullOnActive", fullOnActive.toString());
+		prop.setProperty("bandwidthSaverActive", bandwidthSaverActive.toString());
 		
     	try {	
     		//save properties to project root folder
@@ -61,6 +65,7 @@ public class ConfigData {
     	username = prop.getProperty("username");
     	password = prop.getProperty("password");
     	fullOnActive = Boolean.valueOf(prop.getProperty("fullOnActive"));
+    	bandwidthSaverActive = Boolean.valueOf(prop.getProperty("bandwidthSaverActive"));
     	
     	return true;
 	}

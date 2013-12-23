@@ -33,6 +33,7 @@ public class ConfigWindow extends JDialog {
 	private static JLabel lblUsername;
 	private static JPasswordField passwordField;
 	private static JCheckBox chckbxAttivaApplicazioneFull;
+	private static JCheckBox chckbxAttivaSalvabanda;
 	
 	private static ConfigData config;
 	
@@ -80,7 +81,7 @@ public class ConfigWindow extends JDialog {
 		contentPane.add(lblPassword);
 		
 		chckbxAttivaApplicazioneFull = new JCheckBox("Attiva applicazione full screen");
-		chckbxAttivaApplicazioneFull.setBounds(20, 164, 324, 23);
+		chckbxAttivaApplicazioneFull.setBounds(22, 146, 324, 23);
 		chckbxAttivaApplicazioneFull.setSelected(config.fullOnActive);
 		contentPane.add(chckbxAttivaApplicazioneFull);
 		
@@ -93,6 +94,11 @@ public class ConfigWindow extends JDialog {
 		btnCancel.setBounds(262, 222, 117, 29);
 		btnCancel.addActionListener(new btnCancel_Action(this));
 		contentPane.add(btnCancel);
+		
+		chckbxAttivaSalvabanda = new JCheckBox("Attiva salva-banda");
+		chckbxAttivaSalvabanda.setBounds(23, 181, 174, 23);
+		chckbxAttivaSalvabanda.setSelected(config.bandwidthSaverActive);
+		contentPane.add(chckbxAttivaSalvabanda);
 		
 	}
 
@@ -110,6 +116,7 @@ public class ConfigWindow extends JDialog {
 			config.username = textField_1.getText();
 			config.password = new String(passwordField.getPassword());
 			config.fullOnActive = chckbxAttivaApplicazioneFull.isSelected();
+			config.bandwidthSaverActive = chckbxAttivaSalvabanda.isSelected();
 			
 			// And close
 			frame.setVisible(false); 
@@ -131,6 +138,5 @@ public class ConfigWindow extends JDialog {
 			frame.dispose();
 		}
 	}
-
 }
 
