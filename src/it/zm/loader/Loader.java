@@ -146,10 +146,22 @@ public class Loader {
 				// Initialize menu
 				initMenu(dc);
 				
+				// Manage multiple screen environment
+			    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			    GraphicsDevice[] gd = ge.getScreenDevices();
+			    GraphicsDevice device; // This device will be used to display the program
+			    if( gd.length > 1 ) {
+			    	// Show on the secondary screen 
+			        device = gd[1];
+			        System.out.println("Show on secondary screen");
+			    } else {
+			    	device = gd[0];
+			        System.out.println("Show on primary screen");
+			    }
+				
 				// Get screen resolution
-				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				double width = screenSize.getWidth();
-				double height = screenSize.getHeight() - 20; // 20 seems to be the magic number for menu height
+				double width = device.getDisplayMode().getWidth();//screenSize.getWidth();
+				double height = device.getDisplayMode().getHeight() - 20; //screenSize.getHeight() - 20; // 20 seems to be the magic number for menu height
 				
 				int playGroundX = (int)width, playGroundY = (int) height; 
 				
@@ -191,13 +203,14 @@ public class Loader {
 				frame.setSize(playGroundX, playGroundY);
 				frame.setResizable(false);
 				frame.setLocationRelativeTo(null);
+		        frame.setLocation(device.getDefaultConfiguration().getBounds().x, frame.getY());
 				
 				// Full size
 				if(confData.fullOnActive){
 					frame.setResizable(false);
 	            	frame.setUndecorated(true);
 				}
-	            	
+				
 	            // Showtime
 				frame.setVisible(true);
 			}
