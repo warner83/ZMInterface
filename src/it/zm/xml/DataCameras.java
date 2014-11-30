@@ -136,7 +136,11 @@ public class DataCameras extends DataManagement {
 		double ratioh = (double) height / imageh * 100;
 		
 		ret = (int) Math.ceil( Math.max(ratiow, ratioh) );
-		
+	
+                if(ret > 100)
+                    // 100% maximum scale
+                    ret = 100;
+
 		return ret;
 	}
 }
