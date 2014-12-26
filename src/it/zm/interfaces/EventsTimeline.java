@@ -185,9 +185,9 @@ public class EventsTimeline{
 		Integer numFrame = Integer.parseInt(maxframeid);
 		String frame = String.format("%03d", numFrame);;
 		
-		// Get the string of the image in this format "http://192.168.69.104/zm/events/3/2494859/011-analyse.jpg"
+		// Get the string of the image in this format "http://192.168.69.104/zm/events/3/2494859/011-capture.jpg" ZM moved from analyze.jpg to capture.jpg on 1.28
 		String base = new String(baseUrl.replaceAll("index.php", ""));
-		String u =	base+"events/"+ID+"/"+evID+"/"+frame+"-analyse.jpg";
+		String u =	base+"events/"+ID+"/"+evID+"/"+frame+"-capture.jpg";
 				
 		try {
 			bi = ImageUtils.createImage(new URL(u));
